@@ -8,7 +8,7 @@ public class CasterCollider : MonoBehaviour
 {
     public Rigidbody parentRigidbody;
     public float radius; //The radius of the wheel, measured in local space.
-	public float groundDetectorDistance;
+    public float groundDetectorDistance;
     public LayerMask groundLayers;
     public float mass; //The mass of the wheel. Must be larger than zero.
 
@@ -44,7 +44,7 @@ public class CasterCollider : MonoBehaviour
     void FixedUpdate()
     {
         //Raycast down along the suspension to find out how far the ground is to the wheel
-        if (Physics.Raycast(new Ray(_dummyWheel.position, -_dummyWheel.up), out _hit, groundDetectorDistance)) //The wheel is in contact with the ground
+        if (Physics.Raycast(new Ray(_dummyWheel.position, -_dummyWheel.up), out _hit, groundDetectorDistance, groundLayers)) //The wheel is in contact with the ground
         {
             if (!_isGrounded) //If not previously grounded, set the prevPosition value to the wheel's current position.
             {
@@ -101,7 +101,7 @@ public class CasterCollider : MonoBehaviour
     public void OnDrawGizmosSelected()
     {
         Transform t = _dummyWheel != null ? _dummyWheel.transform : transform;
-        Gizmos.color = Physics.Raycast(new Ray(t.position, -t.up), out _hit, groundDetectorDistance) ? Color.blue : Color.green;
+        Gizmos.color = Physics.Raycast(new Ray(t.position, -t.up), out _hit, groundDetectorDistance, groundLayers) ? Color.blue : Color.green;
         Gizmos.DrawLine(t.position, t.position - t.up * groundDetectorDistance);
         Gizmos.DrawWireSphere(t.position - t.up * groundDetectorDistance, .1f);
 
@@ -235,7 +235,6 @@ public class WheelFrictionCurve
         int top = _arraySize - 1;
         int bottom = 0;
         int index = (int)((top + bottom) * 0.5f);
-
         WheelFrictionCurvePoint result = curvePoints[index];
 
         //Binary search the curve to find the corresponding t value for the given slip
@@ -258,7 +257,6 @@ public class WheelFrictionCurve
         float slip2 = curvePoints[top].SlipForcePoint.x;
         float force1 = curvePoints[bottom].SlipForcePoint.y;
         float force2 = curvePoints[top].SlipForcePoint.y;
-        
         float slipFraction = (slip - slip1) / (slip2 - slip1);
 
         return force1 * (1- slipFraction) + force2 * (slipFraction);
