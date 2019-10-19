@@ -1,7 +1,3 @@
-/*
- * CasterCollider
- * Based on the WheelColliderSource project by Nic Tolentino.
-*/
 using UnityEngine;
 
 public class CasterCollider : MonoBehaviour
@@ -179,16 +175,11 @@ public class WheelFrictionCurve
         _asymptoteValue = 5500;
         _stiffness = 1;
 
+        //Generate the arrays
         _arraySize = 50;
         _extremePoints = new WheelFrictionCurvePoint[_arraySize];
         _asymptotePoints = new WheelFrictionCurvePoint[_arraySize];
 
-        UpdateArrays();
-    }
-
-    void UpdateArrays()
-    {
-        //Generate the arrays
         for (int i = 0; i < _arraySize; ++i)
         {
             _extremePoints[i].TValue = (float)i / (float)_arraySize;
@@ -199,7 +190,6 @@ public class WheelFrictionCurve
                     Vector2.zero,
                     new Vector2(_extremumSlip * 0.5f + 1, 0)
                 );
-
             _asymptotePoints[i].TValue = (float)i / (float)_arraySize;
             _asymptotePoints[i].SlipForcePoint = Hermite(
                 (float)i / (float)_arraySize,
